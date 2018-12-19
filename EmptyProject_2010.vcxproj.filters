@@ -21,6 +21,12 @@
     <Filter Include="OBJLoader">
       <UniqueIdentifier>{45b89e6a-65ed-472c-bd33-bc46807129a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{1ea778ca-0f12-42f0-8e7c-a75a95690f59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\ImageManager">
+      <UniqueIdentifier>{f968d1fa-9865-4902-a555-f8dee43ff203}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXUT\Optional\directx.ico">
@@ -82,7 +88,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EmptyProject.cpp" />
     <ClCompile Include="OBJLoader.cpp">
       <Filter>OBJLoader</Filter>
     </ClCompile>
@@ -91,6 +96,12 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageManager.cpp">
+      <Filter>Manager\ImageManager</Filter>
+    </ClCompile>
+    <ClCompile Include="EmptyProject.cpp">
+      <Filter>Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +114,12 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageManager.h">
+      <Filter>Manager\ImageManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@ class MainGame
 {
 private:
 	Camera * camera;
-	LPD3DXMESH mesh;
+	Mesh* mesh;
 public:
 	MainGame();
 	virtual ~MainGame();

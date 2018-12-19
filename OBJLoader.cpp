@@ -14,6 +14,7 @@ OBJLoader::~OBJLoader()
 
 void OBJLoader::CreateMesh(LPD3DXMESH * mesh)
 {
+	
 	if (FAILED(D3DXCreateMeshFVF(Index.size() / 3, Vertex.size(), D3DXMESH_MANAGED | D3DXMESH_32BIT, VERTEXFVF, g_device, mesh)))
 	{
 		DEBUG_LOG("Failed D3DXCreateMeshFVF");
@@ -70,9 +71,151 @@ void OBJLoader::CreateMesh(LPD3DXMESH * mesh)
 	Normal.clear();
 }
 
-void OBJLoader::MtlLoad(const string & mtlName)
+void OBJLoader::MtlLoad(const string & mtlName, Mesh * mesh, const string & mapPath)
 {
+	ifstream mtlLoader;
 
+	mtlLoader.open(mtlPath);
+
+	if (mtlLoader.fail())
+	{
+		DEBUG_LOG("Mtl 파일 로드 실패!" << mtlName << " " << mtlPath);
+		return;
+	}
+	
+	Material * lpMtl = nullptr;
+	D3DMATERIAL9 * d3dMtl = nullptr;
+
+	bool findMtl = false;
+
+	while (!mtlLoader.eof())
+	{
+		string tag;
+		mtlLoader >> tag;
+
+		if (!findMtl)
+		{
+			if (tag == "newmtl")
+			{
+				mtlLoader >> tag;
+				if (tag == mtlName)
+				{
+					lpMtl = new Material;
+					
+					lpMtl->mtlName = mtlName;
+					mesh->vMaterial.push_back(lpMtl);
+					
+					d3dMtl = &lpMtl->material;
+
+					findMtl = true;
+				}
+			}
+		}
+		else
+		{
+			if (tag == "Ka")
+			{
+				float r, g, b;
+				r = g = b = 0.f;
+				
+				mtlLoader >> tag;
+				r = atof(tag.c_str());
+
+				mtlLoader >> tag;
+				g = atof(tag.c_str());
+
+				mtlLoader >> tag;
+				b = atof(tag.c_str());
+
+				d3dMtl->Ambient = { r, g, b, 1.f };
+			}
+			if (tag == "Kd")
+			{
+				float r, g, b;
+				r = g = b = 0.f;
+
+				mtlLoader >> tag;
+				r = atof(tag.c_str());
+
+				mtlLoader >> tag;
+				g = atof(tag.c_str());
+
+				mtlLoader >> tag;
+				b = atof(tag.c_str());
+
+				d3dMtl->Diffuse = { r, g, b, 1.f };
+			}
+
+			if (tag == "Ks")
+			{
+				float r, g, b;
+				r = g = b = 0.f;
+
+				mtlLoader >> tag;
+				r = atof(tag.c_str());
+
+				mtlLoader >> tag;
+				g = atof(tag.c_str());
+
+				mtlLoader >> tag;
+				b = atof(tag.c_str());
+
+				d3dMtl->Specular = { r, g, b, 1.f };
+			}
+
+			if (tag == "illum")
+			{
+				float l;
+
+				mtlLoader >> tag;
+				l = atof(tag.c_str());
+
+				lpMtl->fIllum = l;
+			}
+
+			if (tag == "Ns")
+			{
+				float n;
+
+				mtlLoader >> tag;
+				n = atof(tag.c_str());
+			
+				lpMtl->fNs = n;
+			}
+
+			if (tag == "Tr" || tag == "d")
+			{
+				float a;
+
+				mtlLoader >> tag;
+				a = atof(tag.c_str());
+			
+				lpMtl->fAlpha = a;
+			}
+
+			if (tag == "map_Kd")
+			{
+				mtlLoader >> tag;
+
+				string ImagePath;
+				
+				if (mapPath == "None")
+				{
+					int pathIndex = OBJPath.rfind("/"); // 마지막으로 사용된 해당 문자의 인덱스를 가져옴
+					ImagePath = OBJPath.substr(0, pathIndex + 1) + tag; // 첫번쨰 인자부터 두번째 인자의 수만큼 글자를 가져옴
+				}
+				else
+					ImagePath = mapPath + tag;
+
+				lpMtl->map = GIMG(ImagePath, ImagePath);
+			}
+
+			if (tag == "newmtl")
+				break;
+		}
+	}
+
+	mtlLoader.close();
 }
 
 DWORD OBJLoader::AddVertex(UINT hash, VERTEX * pVertex)
@@ -151,8 +294,9 @@ DWORD OBJLoader::AddVertex(UINT hash, VERTEX * pVertex)
 	return index;
 }
 
-void OBJLoader::OBJLoad(LPD3DXMESH* mesh, const string & objPath, const string & mapPath)
+void OBJLoader::OBJLoad(Mesh * mesh, const string & objPath, const string & mapPath)
 {
+	OBJPath = objPath;
 
 	DWORD dwAttribute = 0;
 
@@ -217,7 +361,38 @@ void OBJLoader::OBJLoad(LPD3DXMESH* mesh, const string & objPath, const string &
 			Attribute.push_back(dwAttribute);
 			continue;
 		}
+		else if (tag == "mtllib")
+		{
+			loader >> mtlPath;
+
+			int pathIndex = objPath.rfind("/"); // 마지막으로 사용된 해당 문자의 인덱스를 가져옴
+
+			mtlPath = objPath.substr(0, pathIndex + 1) + mtlPath; // 첫번쨰 인자부터 두번째 인자의 수만큼 글자를 가져옴
+		}
+		else if (tag == "usemtl")
+		{
+			loader >> tag;
+
+			bool bFind = false;
+
+			for (int iMtl = 0; iMtl < mesh->vMaterial.size(); ++iMtl)
+			{
+				if (mesh->vMaterial[iMtl]->mtlName == tag)
+				{
+					dwAttribute = iMtl;
+					bFind = true;
+				}
+			}
+	
+			if (!bFind)
+			{
+				dwAttribute = mesh->vMaterial.size();
+				MtlLoad(tag, mesh, mapPath);
+			}
+			
+			continue;
+		}
 	}
 
-	return CreateMesh(mesh);
+	return CreateMesh(&mesh->lpD3DXMesh);
 }

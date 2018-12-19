@@ -20,10 +20,43 @@ enum SYSTEM
 #include <list>
 #include <string>
 #include <fstream>
+#include <map>
 
 using Vector2 = D3DXVECTOR2;
 using Vector3 = D3DXVECTOR3;
 using Matrix = D3DXMATRIX;
+
+using namespace std;
+
+#include "ImageManager.h"
+
+struct Material
+{
+	string mtlName;
+
+	D3DMATERIAL9 material;
+	texture * map = nullptr;
+
+	float fAlpha = 1;
+	float fIllum;
+	float fNs;
+};
+
+struct Mesh
+{
+	LPD3DXMESH lpD3DXMesh;
+	vector<Material*> vMaterial;
+
+	~Mesh()
+	{
+		for (auto Iter : vMaterial)
+			SAFE_DELETE(Iter);
+		
+		vMaterial.clear();
+
+		SAFE_RELEASE(lpD3DXMesh);
+	}
+};
 
 struct VERTEX
 {
@@ -36,7 +69,6 @@ struct VERTEX
 	{}
 	VERTEX(){}
 };
-
 #define VERTEXFVF D3DFVF_XYZ | D3DFVF_NORMAL| D3DFVF_TEX1
 
-using namespace std;
+
