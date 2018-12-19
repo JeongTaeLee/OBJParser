@@ -27,6 +27,9 @@
     <Filter Include="Manager\ImageManager">
       <UniqueIdentifier>{f968d1fa-9865-4902-a555-f8dee43ff203}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ModelView">
+      <UniqueIdentifier>{5162677f-e962-4402-b184-5ff23687a28b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXUT\Optional\directx.ico">
@@ -103,6 +106,9 @@
     <ClCompile Include="EmptyProject.cpp">
       <Filter>Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="ModelViewer.cpp">
+      <Filter>ModelView</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -120,6 +126,9 @@
     </ClInclude>
     <ClInclude Include="ImageManager.h">
       <Filter>Manager\ImageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelViewer.h">
+      <Filter>ModelView</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,17 +1,17 @@
 #pragma once
 
 class Camera;
+class ModelViewer;
 
 class MainGame
 {
 private:
 	Camera * camera;
-	Mesh* mesh;
+	ModelViewer * viewer;
 public:
 	MainGame();
 	virtual ~MainGame();
 
-public:
 	void Init();
 	void Release();
 	void Update();

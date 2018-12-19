@@ -385,10 +385,12 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="ModelViewer.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ImageManager.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="ModelViewer.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="singleton.h" />
     <ClInclude Include="stdafx.h" />
