@@ -162,6 +162,21 @@ void OBJLoader::MtlLoad(const string & mtlName, Mesh * mesh, const string & mapP
 
 				d3dMtl->Specular = { r, g, b, 1.f };
 			}
+			
+			if (tag == "Ke")
+			{
+				float r, g, b;
+				r = g = b = 0.f;
+
+				mtlLoader >> tag;
+				r = atof(tag.c_str());
+				mtlLoader >> tag;
+				g = atof(tag.c_str());
+				mtlLoader >> tag;
+				b = atof(tag.c_str());
+
+				d3dMtl->Emissive = { r,g,b, 1.f };
+			}
 
 			if (tag == "illum")
 			{
@@ -188,8 +203,12 @@ void OBJLoader::MtlLoad(const string & mtlName, Mesh * mesh, const string & mapP
 				float a;
 
 				mtlLoader >> tag;
-				a = atof(tag.c_str());
-			
+				
+				if (tag == "Tr")
+					a = 1.f - atof(tag.c_str());
+				else
+					a = atof(tag.c_str());
+				
 				lpMtl->fAlpha = a;
 			}
 

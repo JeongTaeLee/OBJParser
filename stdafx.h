@@ -40,6 +40,11 @@ struct Material
 	float fAlpha = 1;
 	float fIllum;
 	float fNs;
+
+	Material()
+	{
+		material.Power = 1;
+	}
 };
 
 struct Mesh

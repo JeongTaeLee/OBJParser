@@ -42,6 +42,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
                                      void* pUserContext )
 {
+	MessageBox(nullptr, L"방향키 : 모델 회전 / R : 리셋", L"설명!", MB_OK);
 	mg.Init();
     return S_OK;
 }
